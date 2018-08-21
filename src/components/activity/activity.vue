@@ -143,7 +143,7 @@ export default {
       return activityWithChanges.map(activity => ({
         ...activity,
         htmlcomment: this.$helpers.snarkdown(
-          (activity.comment || "").replace(/#/g, "") || ""
+          ((activity.comment || "").replace(/#/g, "") || "").trim()
         )
       }));
     }
