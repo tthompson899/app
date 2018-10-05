@@ -1,7 +1,7 @@
 <template>
   <div class="v-simple-select">
     <select @change="stageValue" :value="value" :disabled="disabled" ref="selectElement">
-      <option disabled selected="value == null" value="">{{ placeholder || "--" }}</option>
+      <option disabled :selected="value == null" value="">{{ placeholder || "--" }}</option>
       <slot />
     </select>
     <div class="preview">
@@ -41,7 +41,7 @@ export default {
     }
   },
   mounted: function() {
-    let selectElement = this.$refs.selectElement;
+    const selectElement = this.$refs.selectElement;
     this.valueText =
       selectElement.options[selectElement.selectedIndex].text || this.value;
   }
