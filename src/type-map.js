@@ -233,7 +233,7 @@ export default {
     description: i18n.t("fieldtypes.status"),
     mysql: {
       datatypes: ["CHAR", "VARCHAR", "INT"],
-      default: "INT"
+      default: "VARCHAR"
     }
   },
   string: {
