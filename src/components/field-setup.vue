@@ -586,11 +586,18 @@ export default {
     fieldInfo() {
       this.useFieldInfo();
     },
-    interfaceName() {
+    interfaceName(name) {
+      if (!name) return;
+
       this.type = this.availableFieldTypes[0];
+
       this.datatype = this.type
         ? mapping[this.type][this.databaseVendor].default
         : null;
+
+      if (mapping[this.type].defaultValue) {
+        this.default_value = mapping[this.type].defaultValue;
+      }
 
       this.initRelation();
     },
@@ -602,6 +609,10 @@ export default {
     datatype() {
       if (this.selectedDatatypeInfo.length) {
         this.length = this.selectedDatatypeInfo.defaultLength;
+
+        if (mapping[this.type][this.databaseVendor].length) {
+          this.length = mapping[this.type][this.databaseVendor].length;
+        }
       }
 
       if (this.selectedDatatypeInfo && this.selectedDatatypeInfo.decimal) {
@@ -610,6 +621,16 @@ export default {
           "," +
           this.selectedDatatypeInfo.defaultDecimals;
       }
+    },
+    interfaceOptions(groupedOptions) {
+      const options = {
+        ...groupedOptions.advanced,
+        ...groupedOptions.regular
+      };
+
+      this.$lodash.forEach(options, (info, key) => {
+        this.$set(this.options, key, info.default);
+      });
     },
     lengthDisabled(disabled) {
       if (disabled) {
