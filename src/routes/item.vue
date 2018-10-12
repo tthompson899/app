@@ -185,11 +185,25 @@ export default {
       ? this.$helpers.formatTitle(this.collection.substr(9))
       : this.$helpers.formatTitle(this.collection);
 
-    return {
-      title: this.$t("editing", {
-        collection
-      })
-    };
+    if (this.isNew) {
+      return {
+        title: this.$t("create", {
+          collection
+        })
+      };
+    } else if (this.batch) {
+      return {
+        title: this.$t("batch_edit", {
+          collection
+        })
+      };
+    } else {
+      return {
+        title: this.$t("editing", {
+          collection
+        })
+      };
+    }
   },
   components: {
     VLoader,
