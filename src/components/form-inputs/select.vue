@@ -41,6 +41,7 @@
         v-for="(key, optionValue) in parsedOptions"
         :key="optionValue"
         :value="optionValue"
+        :selected="value == optionValue"
       >{{ key }}</option>
     </select>
     <input

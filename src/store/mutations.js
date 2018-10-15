@@ -62,10 +62,14 @@ const mutations = {
   [SET_COLLECTIONS](state, data) {
     state.collections = mapValues(keyBy(data, "collection"), info => {
       const statusField = find(info.fields, { interface: "status" });
-      const status_mapping =
+      let status_mapping =
         statusField &&
         statusField.options &&
         statusField.options.status_mapping;
+
+      if (status_mapping && typeof status_mapping === "string") {
+        status_mapping = JSON.parse(status_mapping);
+      }
 
       return {
         ...info,

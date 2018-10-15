@@ -19,7 +19,7 @@
           <v-input class="input" id="project-name" v-model="values.project_name" />
         </label>
         <label>
-          {{ $t("environment") }}
+          {{ $t("project_key") }}
           <v-input class="input" id="environment" disabled value="Default ( _ )" />
         </label>
         <label>

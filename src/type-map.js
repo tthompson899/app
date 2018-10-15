@@ -142,7 +142,7 @@ export default {
     description: i18n.t("fieldtypes.datetime"),
     mysql: {
       datatypes: ["DATETIME"],
-      default: "DATE"
+      default: "DATETIME"
     }
   },
   datetime_created: {

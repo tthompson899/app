@@ -178,7 +178,7 @@ export default {
   item_count_filter:
     "Keine gefilterten Elemente | Ein gefiltertes Element | {count} gefiltertes Element",
   item_deleted: "Element gelöscht",
-  item_saved: "Element gespeichert",
+  item_saved: "Element gespeichert | {count} Elemente gespeicherte",
   extension_error:
     "Es ist ein Problem beim Laden der {ext} Erweiterung aufgetreten.",
   extensions_missing: "Keine Erweiterungen gefunden",

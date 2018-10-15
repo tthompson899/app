@@ -197,6 +197,7 @@ export default {
   enter_collection_name: "Enter collection name...",
   enter_role_name: "Enter role name...",
   environment: "Environment",
+  project_key: "Project Key",
   errors: {
     "-1": "Couldn't reach API",
     11: "Can't connect to database",
@@ -243,7 +244,7 @@ export default {
     "Every interface can be perfectly tailored to your needs. Below are the available options for this interface, but only some are required.",
   install: "Install",
   install_copy:
-    "This API has not yet been configured. Would you like to install and configure it now?",
+    "This API has not been setup yet. Would you like to install and configure it now?",
   is_empty: "Is empty",
   is_not_null: "Is not NULL",
   is_null: "Is NULL",
@@ -253,7 +254,7 @@ export default {
   item_count_filter:
     "No Filtered Items | One Filtered Item | {count} Filtered Items",
   item_deleted: "Item Deleted",
-  item_saved: "Item Saved",
+  item_saved: "Item Saved | {count} Items Saved",
   junction_collection: "Junction Collection",
   extension_error: "There was a problem loading the {ext} extension.",
   extensions_missing: "No Extensions Found",
@@ -418,6 +419,7 @@ export default {
   version: "Version",
   version_and_updates: "Version and Updates",
   view_type: "View As...",
+  welcome: "Welcome",
   writable_fields: "Writable Fields",
   writable_fields_copy: "Select the fields that the user can edit",
   yes: "Yes"

@@ -40,10 +40,15 @@ export default {
       this.valueText = event.target.options[event.target.selectedIndex].text;
     }
   },
-  mounted: function() {
+  mounted() {
     const selectElement = this.$refs.selectElement;
     this.valueText =
       selectElement.options[selectElement.selectedIndex].text || this.value;
+  },
+  watch: {
+    value(value) {
+      this.valueText = value;
+    }
   }
 };
 </script>

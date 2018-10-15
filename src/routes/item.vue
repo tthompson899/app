@@ -365,7 +365,7 @@ export default {
       return this.collectionInfo && this.collectionInfo.single === true;
     },
     primaryKeyField() {
-      return this.$lodash.find(this.fields, { primary_key: "1" }).field;
+      return this.$lodash.find(this.fields, { primary_key: true }).field;
     },
     batch() {
       return this.primaryKey.includes(",");
@@ -544,7 +544,12 @@ export default {
           return savedValues;
         })
         .then(savedValues => {
-          this.$notify.confirm(this.$t("item_saved"));
+          const savedValuesLength = this.savedValues.length;
+          this.$notify.confirm(
+            this.$tc("item_saved", savedValuesLength, {
+              count: savedValuesLength
+            })
+          );
 
           if (method === "leave") {
             if (this.collection.startsWith("directus_")) {

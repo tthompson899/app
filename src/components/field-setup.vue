@@ -18,7 +18,7 @@
       <p v-else class="subtext">
         {{ $t("select_interface_below" )}}
       </p>
-      <div >
+      <div>
         <v-details
           v-for="(group, index) in interfacesGrouped"
           :title="group.title"
@@ -61,8 +61,8 @@
             <label>
               {{ $t("field_type") }}
               <v-simple-select v-model="type">
-                <option v-for="type in availableFieldTypes" :key="type" :value="type">
-                  {{ $helpers.formatTitle(type) }}
+                <option v-for="typeOption in availableFieldTypes" :key="typeOption" :value="typeOption" :selected="type === typeOption">
+                  {{ $helpers.formatTitle(typeOption) }}
                 </option>
               </v-simple-select>
               <small class="description">{{ fieldTypeDescription }}</small>
@@ -70,8 +70,8 @@
             <label>
               {{ $t("db_datatype", { db: $helpers.formatTitle(databaseVendor) }) }}
               <v-simple-select v-model="datatype">
-                <option v-for="type in availableDatatypes" :key="type" :value="type">
-                  {{ type }}
+                <option v-for="typeOption in availableDatatypes" :key="typeOption" :value="typeOption" :selected="datatype === typeOption">
+                  {{ typeOption }}
                 </option>
               </v-simple-select>
               <small class="description">{{ selectedDatatypeInfo && selectedDatatypeInfo.description }}</small>
@@ -344,10 +344,10 @@ export default {
   },
   computed: {
     collections() {
-      return this.$store.state.collections;
+      return Object.assign({}, this.$store.state.collections);
     },
     interfaces() {
-      return this.$store.state.extensions.interfaces;
+      return Object.assign({}, this.$store.state.extensions.interfaces);
     },
     interfacesGrouped() {
       const groups = [
@@ -432,7 +432,7 @@ export default {
     },
     interfaceOptions() {
       if (!this.selectedInterfaceInfo) return null;
-      const options = this.selectedInterfaceInfo.options;
+      const options = Object.assign({}, this.selectedInterfaceInfo.options);
       const regular = this.$lodash.pickBy(options, opt => !opt.advanced);
       const advanced = this.$lodash.pickBy(
         options,
@@ -472,7 +472,8 @@ export default {
     },
     fieldTypeDescription() {
       if (!this.type) return null;
-      return mapping[this.type].description;
+
+      return mapping[this.type] && mapping[this.type].description;
     },
     lengthDisabled() {
       if (
@@ -589,6 +590,19 @@ export default {
     interfaceName(name) {
       if (!name) return;
 
+      if (name !== this.fieldInfo.interface) {
+        const options = {
+          ...this.interfaceOptions.advanced,
+          ...this.interfaceOptions.regular
+        };
+
+        this.$lodash.forEach(options, (info, key) => {
+          this.$set(this.options, key, info.default);
+        });
+      }
+
+      if (this.existing) return;
+
       this.type = this.availableFieldTypes[0];
 
       this.datatype = this.type
@@ -621,11 +635,24 @@ export default {
       this.initRelation();
     },
     type(type) {
+      if (this.existing) return;
+
       if (type) {
         this.datatype = mapping[type][this.databaseVendor].default;
       }
     },
     datatype() {
+      if (this.existing) return;
+
+      if (
+        this.selectedInterfaceInfo &&
+        this.selectedInterfaceInfo.recommended &&
+        this.selectedInterfaceInfo.recommended.length
+      ) {
+        this.length = this.selectedInterfaceInfo.recommended.length;
+        return;
+      }
+
       if (this.selectedDatatypeInfo.length) {
         this.length = this.selectedDatatypeInfo.defaultLength;
 
@@ -640,16 +667,6 @@ export default {
           "," +
           this.selectedDatatypeInfo.defaultDecimals;
       }
-    },
-    interfaceOptions(groupedOptions) {
-      const options = {
-        ...groupedOptions.advanced,
-        ...groupedOptions.regular
-      };
-
-      this.$lodash.forEach(options, (info, key) => {
-        this.$set(this.options, key, info.default);
-      });
     },
     lengthDisabled(disabled) {
       if (disabled) {
@@ -776,14 +793,27 @@ export default {
       this.$emit("save", result);
     },
     useFieldInfo() {
-      if (!this.fieldInfo) return;
+      if (!this.fieldInfo || Object.keys(this.fieldInfo).length === 0) return;
 
-      Object.keys(this.fieldInfo).forEach(key => {
-        if (this.fieldInfo[key] != null) this[key] = this.fieldInfo[key];
+      // This is somewhat disgusting. The parent fields route shouldn't pass in the
+      // stale copy of the field based on the API load, but should instead pass
+      // just the name of the field, so we can directly pull it from the store.
+      //
+      // The parent should also use the store directly, seeing that we are loading
+      // the fields nested in the collections anyway (this didn't use to be
+      // that way). +1 for future optimizations!
+      const fieldName = this.fieldInfo.field;
+      const collectionName = this.collectionInfo.collection;
+      const storeFieldCopy = this.$lodash.clone(
+        this.$store.state.collections[collectionName].fields[fieldName]
+      );
+
+      Object.keys(storeFieldCopy).forEach(key => {
+        if (storeFieldCopy[key] != null) this[key] = storeFieldCopy[key];
       });
 
       // 'interface' is a reserved word in JS, so we need to work around that
-      this.interfaceName = this.fieldInfo.interface;
+      this.interfaceName = storeFieldCopy.interface;
     },
     initRelation() {
       if (!this.relation) return;

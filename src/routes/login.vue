@@ -8,6 +8,7 @@
         <img class="logo" alt="" src="../assets/logo-dark.svg" />
 
         <h1 v-if="loading">{{ loggedIn? $t('fetching_data') : $t('signing_in') }}</h1>
+        <h1 v-else-if="notInstalled">{{ $t('welcome') }}</h1>
         <h1 v-else>{{ resetMode ? $t('reset_password') : $t('sign_in') }}</h1>
 
         <label class="project-switcher">
@@ -814,7 +815,11 @@ small {
 }
 
 .install-copy {
-  line-height: 1.6;
   margin-bottom: 80px;
+  max-width: 400px;
+  font-size: 16px;
+  color: var(--light-gray);
+  line-height: 26px;
+  font-weight: 400;
 }
 </style>
