@@ -282,7 +282,7 @@ export default {
         this.loading = true;
 
         this.$axios
-          .post(this.url + "/auth/password/request", {
+          .post(this.url + "auth/password/request", {
             email: this.email
           })
           .then(() => {
