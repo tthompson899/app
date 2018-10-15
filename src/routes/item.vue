@@ -187,7 +187,7 @@ export default {
 
     if (this.isNew) {
       return {
-        title: this.$t("create", {
+        title: this.$t("creating_item_page_title", {
           collection
         })
       };
